@@ -9,11 +9,12 @@
         <div class="alert alert-success">{{ session('msg') }}</div>
     @endif
 
-    @foreach ($exams as $exam)
-        <div class="row">
-            @include('admin.blocks.sidebar')
-            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <h2 class="pt-3 pb-2 mb-3">Edit Exam</h2>
+    <div class="row">
+        @include('admin.blocks.sidebar')
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <h2 class="pt-3 pb-2 mb-3">Edit Exam</h2>
+
+            @foreach ($exams as $exam)
                 <form action="{{ route('admin.exams.update', $exam->id_exam) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -54,7 +55,7 @@
 
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
-            </div>
+            @endforeach
         </div>
-    @endforeach
+    </div>
 @endsection

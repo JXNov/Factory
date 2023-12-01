@@ -27,14 +27,14 @@ class Subjects extends Model
 
     public function createSubject(array $data)
     {
-        $subject = DB::insert('INSERT INTO subjects (name_subject) VALUES (?)', [$data['name']]);
+        $subject = DB::insert('INSERT INTO subjects (name_subject, img_subject, detail_subject) VALUES (?, ?, ?)', [$data['name'], $data['img'], $data['detail']]);
 
         return $subject;
     }
 
     public function updateSubject(array $data, string $id)
     {
-        $subject = DB::update('UPDATE subjects SET name_subject = ? WHERE id_subject = ?', [$data['name'], $id]);
+        $subject = DB::update('UPDATE subjects SET name_subject = ?, img_subject = ?, detail_subject = ? WHERE id_subject = ?', [$data['name'], $data['img'], $data['detail'], $id]);
 
         return $subject;
     }

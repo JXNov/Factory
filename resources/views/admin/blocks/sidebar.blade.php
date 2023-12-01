@@ -4,41 +4,54 @@
             <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="{{ route('admin.home') }}">
                     <span data-feather="home"></span>
-                    Dashboard
+                    Home
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.subjects') }}">
                     <span data-feather="file"></span>
                     Subjects
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.exams') }}">
                     <span data-feather="file-text"></span>
                     Exams
                 </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('admin.questions') }}">
+                    <span data-feather="help-circle"></span>
+                    Questions
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.questions') }}">
+                    <span data-feather="file-text"></span>
+                    Scores
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.users') }}">
                     <span data-feather="users"></span>
-                    Examinees
+                    Users
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="bar-chart-2"></span>
-                    Reports
-                </a>
-            </li>
-            <li class="nav-item">
+
+            {{-- <li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="layers"></span>
                     Integrations
                 </a>
-            </li>
+            </li> --}}
         </ul>
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+
+        {{-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Saved reports</span>
             <a class="link-secondary" href="#" aria-label="Add a new report">
                 <span data-feather="plus-circle"></span>
@@ -69,6 +82,6 @@
                     Year-end sale
                 </a>
             </li>
-        </ul>
+        </ul> --}}
     </div>
 </nav>

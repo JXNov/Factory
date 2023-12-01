@@ -9,6 +9,8 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ExamsController as AdminExamsController;
 use App\Http\Controllers\Admin\SubjectsController as AdminSubjectsController;
+use App\Http\Controllers\Admin\QuestionsController as AdminQuestionsController;
+use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 
 use App\Http\Controllers\Client\HomeController as ClientHomeController;
 
@@ -25,9 +27,13 @@ use App\Http\Controllers\Client\HomeController as ClientHomeController;
 */
 
 Route::prefix('admin')->group(function () {
+
+    Route::get('/', [AdminHomeController::class, 'index'])->name('admin.home');
+
+    Route::get('/search', [AdminHomeController::class, 'search'])->name('admin.search');
+
     Route::group(['prefix' => 'exams'], function () {
         Route::get('/', [AdminExamsController::class, 'index'])->name('admin.exams');
-
 
         Route::get('/create', [AdminExamsController::class, 'create'])->name('admin.exams.create');
 
@@ -58,14 +64,46 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [AdminSubjectsController::class, 'destroy'])->name('admin.subjects.destroy');
     });
 
-    Route::get('/search', [AdminHomeController::class, 'search'])->name('admin.search');
+    Route::group(['prefix' => 'questions'], function () {
+        Route::get('/', [AdminQuestionsController::class, 'index'])->name('admin.questions');
 
-    Route::get('/', [AdminHomeController::class, 'index'])->name('admin.home');
+        Route::get('/create', [AdminQuestionsController::class, 'create'])->name('admin.questions.create');
+
+        Route::get('/createByExam/{id}', [AdminQuestionsController::class, 'createByExam'])->name('admin.questions.createByExam');
+
+        Route::post('/', [AdminQuestionsController::class, 'store'])->name('admin.questions.store');
+
+        Route::post('/createByExam/{id}', [AdminQuestionsController::class, 'storeByExam'])->name('admin.questions.storeByExam');
+
+        Route::get('/{id}', [AdminQuestionsController::class, 'show'])->name('admin.questions.show');
+
+        Route::get('/{id}/edit', [AdminQuestionsController::class, 'edit'])->name('admin.questions.edit');
+
+        Route::put('/{id}', [AdminQuestionsController::class, 'update'])->name('admin.questions.update');
+
+        Route::delete('/{id}', [AdminQuestionsController::class, 'destroy'])->name('admin.questions.destroy');
+    });
+
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [AdminUsersController::class, 'index'])->name('admin.users');
+
+        Route::get('/create', [AdminUsersController::class, 'create'])->name('admin.users.create');
+
+        Route::post('/', [AdminUsersController::class, 'store'])->name('admin.users.store');
+
+        Route::get('/{id}', [AdminUsersController::class, 'show'])->name('admin.users.show');
+
+        Route::get('/{id}/edit', [AdminUsersController::class, 'edit'])->name('admin.users.edit');
+
+        Route::put('/{id}', [AdminUsersController::class, 'update'])->name('admin.users.update');
+
+        Route::delete('/{id}', [AdminUsersController::class, 'destroy'])->name('admin.users.destroy');
+    });
 });
 
-Route::get('/register', [RegisterController::class, 'index'])->name('register');
-
 Route::get('/', [ClientHomeController::class, 'index'])->name('/');
+
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
 
 Route::fallback(function () {
     $response = response()->view('errors.404', [], 404);
