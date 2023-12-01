@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ExamController extends Controller
+use App\Models\Admin\Exams;
+use App\Models\Admin\Subjects;
+
+class ExamsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +17,13 @@ class ExamController extends Controller
     // Use the index method to display a list of exams. / Method: GET / URI: /admin/exams
     public function index()
     {
-        return view('admin.home');
+        $exams = new Exams();
+        $exams = $exams->getAllExams();
+
+        $subjects = new Subjects();
+        $subjects = $subjects->getAllSubjects();
+
+        return view('admin.exams.lists', compact('exams', 'subjects'));
     }
 
     /**
@@ -24,7 +33,10 @@ class ExamController extends Controller
     // Use the create method to display a form for creating a new exam. / Method: GET / URI: /admin/exams/create
     public function create()
     {
-        //
+        $subjects = new Subjects();
+        $subjects = $subjects->getAllSubjects();
+
+        return view('admin.exams.create', compact('subjects'));
     }
 
     /**
@@ -34,7 +46,12 @@ class ExamController extends Controller
     // Use the store method to store a newly created exam in the database. / Method: POST / URI: /admin/exams
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $exams = new Exams();
+        $exams = $exams->createExam($data);
+
+        return redirect()->route('admin.exams');
     }
 
     /**
@@ -44,7 +61,10 @@ class ExamController extends Controller
     // Use the show method to display a specific exam. / Method: GET / URI: /admin/exams/{id}
     public function show(string $id)
     {
-        //
+        $exams = new Exams();
+        $exams = $exams->getExamById($id);
+
+        return view('admin.exams.show', compact('exams'));
     }
 
     /**
@@ -54,7 +74,13 @@ class ExamController extends Controller
     // Use the edit method to display a form for editing a specific exam. / Method: GET / URI: /admin/exams/{id}/edit
     public function edit(string $id)
     {
-        //
+        $exams = new Exams();
+        $exams = $exams->getExamById($id);
+
+        $subjects = new Subjects();
+        $subjects = $subjects->getAllSubjects();
+
+        return view('admin.exams.edit', compact('exams', 'subjects'));
     }
 
     /**
@@ -64,7 +90,12 @@ class ExamController extends Controller
     // Use the update method to update a specific exam in the database. / Method: PUT/PATCH / URI: /admin/exams/{id}
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->all();
+
+        $exams = new Exams();
+        $exams = $exams->updateExam($data, $id);
+
+        return redirect()->route('admin.exams');
     }
 
     /**
@@ -74,6 +105,9 @@ class ExamController extends Controller
     // Use the destroy method to delete a specific exam from the database. / Method: DELETE / URI: /admin/exams/{id}
     public function destroy(string $id)
     {
-        //
+        $exams = new Exams();
+        $exams = $exams->deleteExam($id);
+
+        return redirect()->route('admin.exams');
     }
 }
