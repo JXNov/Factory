@@ -28,10 +28,10 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $subject->name_subject }}</td>
                                 <td>
-                                    <a href="{{ route('admin.exams.edit', $subject->id_subject) }}"
+                                    <a href="{{ route('admin.subjects.edit', $subject->id_subject) }}"
                                         class="btn btn-sm btn-primary">Edit</a>
 
-                                    <form action="{{ route('admin.exams.destroy', $subject->id_subject) }}" method="POST"
+                                    <form action="{{ route('admin.subjects.destroy', $subject->id_subject) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')

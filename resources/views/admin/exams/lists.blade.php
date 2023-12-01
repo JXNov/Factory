@@ -23,7 +23,7 @@
                             <th>Exam Limit Quest</th>
                             <th>Exam Description</th>
                             <th>Subject</th>
-                            <th>Exam Action</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,6 +42,9 @@
                                     @endforeach
                                 </td>
                                 <td>
+                                    <a href="{{ route('admin.exams.show', $exam->id_exam) }}"
+                                        class="btn btn-sm btn-success">Manage Questions</a>
+
                                     <a href="{{ route('admin.exams.edit', $exam->id_exam) }}"
                                         class="btn btn-sm btn-primary">Edit</a>
 

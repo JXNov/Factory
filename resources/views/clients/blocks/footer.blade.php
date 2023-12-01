@@ -4,19 +4,19 @@
         <p>Mô tả ngắn về trang web làm bài quiz.</p>
     </div>
     <div class="col-md-4">
-        <h3>Liên kết</h3>
+        <h3>Social Network</h3>
         <ul class="list-unstyled">
-            <li><a href="#">Liên kết 1</a></li>
-            <li><a href="#">Liên kết 2</a></li>
-            <li><a href="#">Liên kết 3</a></li>
+            <li><a href="#">Social Network 1</a></li>
+            <li><a href="#">Social Network 2</a></li>
+            <li><a href="#">Social Network 3</a></li>
         </ul>
     </div>
     <div class="col-md-4">
-        <h3>Liên hệ</h3>
+        <h3>Contact</h3>
         <p>Email: <a href="mailto:info@example.com">info@example.com</a>
         </p>
 
-        <p>Điện thoại: <a href="tel:+123 456 789">+123 456 789</a>
+        <p>Phone number: <a href="tel:+123 456 789">+123 456 789</a>
         </p>
 
     </div>

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Admin\Exams;
 use App\Models\Admin\Subjects;
+use Illuminate\Support\Facades\Storage;
 
 class SubjectsController extends Controller
 {
@@ -44,6 +44,15 @@ class SubjectsController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+
+        if ($request->hasFile('img')) {
+            $file = $request->img;
+            $ext = $file->getClientOriginalExtension();
+            $fileName = time() . '.' . $ext;
+            $file->storeAs('public', $fileName);
+        }
+
+        $data['img'] = $fileName;
 
         $subjects = new Subjects();
         $subjects = $subjects->createSubject($data);
@@ -85,6 +94,19 @@ class SubjectsController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->all();
+
+        $subjects = new Subjects();
+        $subjects = $subjects->getSubjectById($id);
+
+        if ($request->hasFile('img')) {
+            $file = $request->img;
+            $ext = $file->getClientOriginalExtension();
+            $fileName = time() . '.' . $ext;
+            $file->storeAs('public', $fileName);
+            $data['img'] = $fileName;
+        } else {
+            $data['img'] = $subjects[0]->img_subject;
+        }
 
         $subjects = new Subjects();
         $subjects = $subjects->updateSubject($data, $id);

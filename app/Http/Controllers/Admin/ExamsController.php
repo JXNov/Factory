@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Admin\Exams;
 use App\Models\Admin\Subjects;
+use App\Models\Admin\Questions;
 
 class ExamsController extends Controller
 {
@@ -23,7 +24,10 @@ class ExamsController extends Controller
         $subjects = new Subjects();
         $subjects = $subjects->getAllSubjects();
 
-        return view('admin.exams.lists', compact('exams', 'subjects'));
+        $questions = new Questions();
+        $questions = $questions->getAllQuestions();
+
+        return view('admin.exams.lists', compact('exams', 'subjects', 'questions'));
     }
 
     /**
@@ -64,7 +68,13 @@ class ExamsController extends Controller
         $exams = new Exams();
         $exams = $exams->getExamById($id);
 
-        return view('admin.exams.show', compact('exams'));
+        $subjects = new Subjects();
+        $subjects = $subjects->getAllSubjects();
+
+        $questions = new Questions();
+        $questions = $questions->getAllQuestions();
+
+        return view('admin.exams.show', compact('exams', 'subjects', 'questions'));
     }
 
     /**
