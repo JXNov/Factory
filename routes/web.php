@@ -2,9 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\SiteController;
-use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\ExampleController;
+use App\Http\Middleware\CheckRole;
+
+use App\Http\Controllers\RegisterController;
+
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\ExamsController as AdminExamsController;
+use App\Http\Controllers\Admin\SubjectsController as AdminSubjectsController;
+
+use App\Http\Controllers\Client\HomeController as ClientHomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,36 +24,50 @@ use App\Http\Controllers\ExampleController;
 |
 */
 
-
 Route::prefix('admin')->group(function () {
+    Route::group(['prefix' => 'exams'], function () {
+        Route::get('/', [AdminExamsController::class, 'index'])->name('admin.exams');
 
-    Route::prefix('subject')->group(function () {
-        Route::get('/', [SubjectController::class, 'index']);
 
-        Route::get('/create', [SubjectController::class, 'create']);
+        Route::get('/create', [AdminExamsController::class, 'create'])->name('admin.exams.create');
 
-        Route::post('/store', [SubjectController::class, 'store']);
+        Route::post('/', [AdminExamsController::class, 'store'])->name('admin.exams.store');
 
-        Route::get('/edit/{id}', [SubjectController::class, 'edit']);
+        Route::get('/{id}', [AdminExamsController::class, 'show'])->name('admin.exams.show');
 
-        Route::put('/update/{id}', [SubjectController::class, 'update']);
+        Route::get('/{id}/edit', [AdminExamsController::class, 'edit'])->name('admin.exams.edit');
 
-        Route::delete('/destroy/{id}', [SubjectController::class, 'destroy']);
+        Route::put('/{id}', [AdminExamsController::class, 'update'])->name('admin.exams.update');
+
+        Route::delete('/{id}', [AdminExamsController::class, 'destroy'])->name('admin.exams.destroy');
     });
 
-    Route::prefix('example')->group(function () {
-        Route::get('/', [ExampleController::class, 'index']);
+    Route::group(['prefix' => 'subjects'], function () {
+        Route::get('/', [AdminSubjectsController::class, 'index'])->name('admin.subjects');
 
-        Route::get('/create', [ExampleController::class, 'create']);
+        Route::get('/create', [AdminSubjectsController::class, 'create'])->name('admin.subjects.create');
 
-        Route::post('/store', [ExampleController::class, 'store']);
+        Route::post('/', [AdminSubjectsController::class, 'store'])->name('admin.subjects.store');
 
-        Route::get('/edit/{id}', [ExampleController::class, 'edit']);
+        Route::get('/{id}', [AdminSubjectsController::class, 'show'])->name('admin.subjects.show');
 
-        Route::put('/update/{id}', [ExampleController::class, 'update']);
+        Route::get('/{id}/edit', [AdminSubjectsController::class, 'edit'])->name('admin.subjects.edit');
 
-        Route::delete('/destroy/{id}', [ExampleController::class, 'destroy']);
+        Route::put('/{id}', [AdminSubjectsController::class, 'update'])->name('admin.subjects.update');
+
+        Route::delete('/{id}', [AdminSubjectsController::class, 'destroy'])->name('admin.subjects.destroy');
     });
+
+    Route::get('/search', [AdminHomeController::class, 'search'])->name('admin.search');
+
+    Route::get('/', [AdminHomeController::class, 'index'])->name('admin.home');
 });
 
-Route::get('/', [SiteController::class, 'index']);
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+
+Route::get('/', [ClientHomeController::class, 'index'])->name('/');
+
+Route::fallback(function () {
+    $response = response()->view('errors.404', [], 404);
+    return $response;
+});
