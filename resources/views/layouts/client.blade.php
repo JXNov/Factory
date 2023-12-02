@@ -12,16 +12,13 @@
 
 <body>
     <header>
-        @include('clients.blocks.header')
+        @include('clients.blocks.navbar')
     </header>
 
-    <main class="container-fluid">
+    <main>
         @yield('content')
-    </main>
-
-    <footer>
         @include('clients.blocks.footer')
-    </footer>
+    </main>
 
     <script src="{{ asset('assets/clients/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/clients/js/custom.js') }}"></script>

@@ -1,20 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-body-secondary bg-body-secondary p-3">
+<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
     <div class="container-fluid">
-        <!-- Brand -->
-        <a class="navbar-brand" href="{{ route('/') }}">
-            <h3>Le_Quizz</h3>
-        </a>
-
-        <!-- Navbar toggler for mobile devices -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="{{ route('/') }}">Le_Quizz</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar items -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <!-- Dropdown menu -->
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -45,7 +39,6 @@
             </ul>
         </div>
 
-        <!-- Search box and Login button -->
         <div class="d-flex" id="navbarNavItems">
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
