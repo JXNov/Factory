@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\QuestionsController as AdminQuestionsController;
 use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 
 use App\Http\Controllers\Client\HomeController as ClientHomeController;
+use App\Http\Controllers\Client\ExamsController as ClientExamsController;
+use App\Http\Controllers\Client\SubjectsController as ClientSubjectsController;
+use App\Http\Controllers\Client\QuestionsController as ClientQuestionsController;
 
 
 /*
@@ -101,7 +104,30 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-Route::get('/', [ClientHomeController::class, 'index'])->name('/');
+Route::prefix('/')->group(function () {
+
+    Route::get('/', [ClientHomeController::class, 'index'])->name('/');
+
+    Route::prefix('exams')->group(function () {
+        Route::get('/', [ClientExamsController::class, 'index'])->name('exams');
+
+        Route::get('/{id}', [ClientExamsController::class, 'show'])->name('exams.show');
+    });
+
+    Route::prefix('subjects')->group(function () {
+        Route::get('/', [ClientSubjectsController::class, 'index'])->name('subjects');
+
+        Route::get('/{id}', [ClientSubjectsController::class, 'show'])->name('subjects.show');
+    });
+
+    Route::prefix('questions')->group(function () {
+        Route::get('/', [ClientQuestionsController::class, 'index'])->name('questions');
+
+        Route::get('/{id}', [ClientQuestionsController::class, 'show'])->name('questions.show');
+
+        Route::post('/{id}/point', [ClientQuestionsController::class, 'point'])->name('questions.point');
+    });
+});
 
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 

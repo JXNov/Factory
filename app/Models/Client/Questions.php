@@ -17,4 +17,11 @@ class Questions extends Model
 
         return $questions;
     }
+
+    public function getQuestionById($id)
+    {
+        $question = DB::select('SELECT * FROM questions WHERE id = ?', [$id]);
+
+        return $question;
+    }
 }

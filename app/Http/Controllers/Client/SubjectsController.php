@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Client\Subjects;
+use App\Models\Client\Exams;
+use App\Models\Client\Questions;
+
 class SubjectsController extends Controller
 {
     /**
@@ -35,5 +39,21 @@ class SubjectsController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+
+    // Use the show method to display the details of a specific exam. / Method: GET / URI: /admin/exams/{id}
+    public function show($id)
+    {
+        $subjects = new Subjects();
+        $subjects = $subjects->getSubjectById($id);
+
+        $exams = new Exams();
+        $exams = $exams->getAllExams();
+
+        return view('clients.subjects.show', compact('subjects', 'exams'));
     }
 }
