@@ -11,9 +11,7 @@
 </head>
 
 <body>
-    <header>
-        @include('clients.blocks.navbar')
-    </header>
+    @include('clients.blocks.navbar')
 
     <main>
         @yield('content')
@@ -22,6 +20,7 @@
 
     <script src="{{ asset('assets/clients/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/clients/js/custom.js') }}"></script>
+    @stack('script')
 </body>
 
 </html>

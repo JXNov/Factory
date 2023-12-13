@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Admin\Exams;
-use App\Models\Admin\Subjects;
+use App\Models\Exams;
+use App\Models\Subjects;
 
 class HomeController extends Controller
 {
+
     public function index()
     {
         return view('admin.home');
@@ -20,15 +21,15 @@ class HomeController extends Controller
         $search = $request->input('search');
 
         // Search exams
-        $exams = Exams::where('exam_title', 'LIKE', "%{$search}%")
+        $listExams = Exams::where('exam_title', 'LIKE', "%{$search}%")
             ->orWhere('exam_description', 'LIKE', "%{$search}%")
             ->paginate(10); // Adjust the pagination size as needed
 
         // Search subjects
-        $subjects = Subjects::where('name_subject', 'LIKE', "%{$search}%")
+        $listSubjects = Subjects::where('name_subject', 'LIKE', "%{$search}%")
             ->paginate(10); // Adjust the pagination size as needed
 
         // Return view with results or a message
-        return view('admin.blocks.search', compact('exams', 'subjects', 'search'));
+        return view('admin.blocks.search', compact('listExams', 'listSubjects', 'search'));
     }
 }

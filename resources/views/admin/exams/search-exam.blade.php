@@ -13,6 +13,8 @@
         @include('admin.blocks.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <h2 class="pt-3 pb-2 mb-3">Search results Exams for: {{ $search }}</h2>
+
+            @php $i = 1; @endphp
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -27,25 +29,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($exams as $key => $exam)
+                        @foreach ($listExams as $exam)
                             <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $exam->exam_title }}</td>
-                                <td>{{ $exam->exam_time_limit }} Minute</td>
-                                <td>{{ $exam->exam_limit_quest }} Questions</td>
-                                <td>{{ $exam->exam_description }}</td>
+                                <td>{{ $i++ }}</td>
+                                <td>{{ $exam->name }}</td>
+                                <td>{{ $exam->time_limit }} Minute</td>
+                                <td>{{ $exam->number_of_questions }} Questions</td>
+                                <td>{{ $exam->description }}</td>
                                 <td>
-                                    @foreach ($subjects as $subject)
-                                        @if ($subject->id_subject == $exam->id_subject)
-                                            {{ $subject->name_subject }}
+                                    @foreach ($listSubjects as $subject)
+                                        @if ($subject->id == $exam->subject_id)
+                                            {{ $subject->name }}
                                         @endif
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.exams.edit', $exam->id_exam) }}"
+                                    <a href="{{ route('admin.exams.edit', $exam->id) }}"
                                         class="btn btn-sm btn-primary">Edit</a>
 
-                                    <form action="{{ route('admin.exams.destroy', $exam->id_exam) }}" method="POST"
+                                    <form action="{{ route('admin.exams.destroy', $exam->id) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')

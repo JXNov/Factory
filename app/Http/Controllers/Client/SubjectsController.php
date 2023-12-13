@@ -4,56 +4,73 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-use App\Models\Client\Subjects;
-use App\Models\Client\Exams;
-use App\Models\Client\Questions;
+use App\Models\Subjects;
+use App\Models\Exams;
+use App\Models\User;
+use App\Models\UsersSubjects;
 
 class SubjectsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
-    // Use the index method to display a list of exams. / Method: GET / URI: /admin/exams
     public function index()
     {
         return view('client.subjects.lists');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-
-    // Use the create method to display a form for creating a new exam. / Method: GET / URI: /admin/exams/create
-    public function create()
+    public function show(string $id)
     {
-        return view('client.subjects.create');
+        $getSubject = Subjects::findOrFail($id);
+
+        $listExams = Exams::all();
+
+        $checkRegister = $this->checkRegisterSubject($id);
+
+        return view('clients.subjects.show', compact('getSubject', 'listExams', 'checkRegister'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    // Use the store method to store a newly created exam in the database. / Method: POST / URI: /admin/exams
-    public function store(Request $request)
+    public function registerSubject(string $id)
     {
-        //
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+
+            $register = User::join('users_subjects', 'users.id', '=', 'users_subjects.user_id')
+                ->where('users_subjects.user_id', $user_id)
+                ->where('users_subjects.subject_id', $id)
+                ->first();
+
+            $register = UsersSubjects::insert([
+                'user_id' => $user_id,
+                'subject_id' => $id
+            ]);
+
+            if ($register) {
+                return redirect()->route('subjects.show', ['id' => $id])->with('success', 'Đăng ký thành công');
+            } else {
+                return redirect()->route('subjects.show', ['id' => $id])->with('error', 'Đăng ký thất bại');
+            }
+        } else {
+            return redirect()->route('subjects.show', ['id' => $id])->with('error', 'Bạn cần đăng nhập để đăng ký');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-
-    // Use the show method to display the details of a specific exam. / Method: GET / URI: /admin/exams/{id}
-    public function show($id)
+    public function checkRegisterSubject(string $id)
     {
-        $subjects = new Subjects();
-        $subjects = $subjects->getSubjectById($id);
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
 
-        $exams = new Exams();
-        $exams = $exams->getAllExams();
+            $check = User::join('users_subjects', 'users.id', '=', 'users_subjects.user_id')
+                ->where('users_subjects.user_id', $user_id)
+                ->where('users_subjects.subject_id', $id)
+                ->first();
 
-        return view('clients.subjects.show', compact('subjects', 'exams'));
+            $check = UsersSubjects::where('user_id', $user_id)
+                ->where('subject_id', $id)
+                ->first();
+
+            return $check;
+        } else {
+            return false;
+        }
     }
 }

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Client\Exams;
-use App\Models\Client\Subjects;
-use App\Models\Client\Questions;
+use App\Models\Subjects;
+use App\Models\Exams;
+use App\Models\Questions;
 
 class ExamsController extends Controller
 {
@@ -17,42 +17,13 @@ class ExamsController extends Controller
 
     public function index()
     {
-        $exams = new Exams();
-        $exams = $exams->getAllExams();
+        $listSubjects = Subjects::all();
 
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $listExams = Exams::all();
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
-        return view('clients.exams.lists', compact('exams', 'subjects', 'questions'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-
-    public function create()
-    {
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
-
-        return view('clients.exams.create', compact('subjects'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    public function store(Request $request)
-    {
-        $data = $request->all();
-
-        $exams = new Exams();
-        $exams = $exams->createExam($data);
-
-        return redirect()->route('clients.exams');
+        return view('clients.exams.lists', compact('listSubjects', 'listExams', 'listQuestions'));
     }
 
     /**
@@ -61,15 +32,12 @@ class ExamsController extends Controller
 
     public function show(string $id)
     {
-        $exams = new Exams();
-        $exams = $exams->getExamById($id);
+        $listSubjects = Subjects::all();
 
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $getExam = Exams::findOrFail($id);
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
-        return view('clients.exams.show', compact('exams', 'subjects', 'questions'));
+        return view('clients.exams.show', compact('listSubjects', 'getExam', 'listQuestions'));
     }
 }

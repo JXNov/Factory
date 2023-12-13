@@ -45,8 +45,8 @@
                     <label for="subject" class="form-label">Subject</label>
                     <select class="form-select" name="subject">
                         <option selected>Open this select subject</option>
-                        @foreach ($subjects as $subject)
-                            <option value="{{ $subject->id_subject }}">{{ $subject->name_subject }}</option>
+                        @foreach ($listSubjects as $subject)
+                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                         @endforeach
                     </select>
                 </div>

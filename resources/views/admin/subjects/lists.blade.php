@@ -19,27 +19,29 @@
                         <tr>
                             <th>ID</th>
                             <th>Subject Name</th>
-                            <th>Subject Image</th>
                             <th>Subject Detail</th>
+                            <th>Subject Image</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($subjects as $key => $subject)
+                        @foreach ($listSubjects as $key => $subject)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $subject->name_subject }}</td>
+                                <td>{{ $subject->name }}</td>
+                                <td>{{ $subject->description }}</td>
                                 <td width="12%">
-                                    <img src="{{ asset('storage/' . $subject->img_subject) }}" alt=""
-                                        class="img-fluid">
+                                    <img src="{{ asset('storage/' . $subject->image) }}" alt="" class="img-fluid">
                                 </td>
-                                <td>{{ $subject->detail_subject }}</td>
                                 <td>
-                                    <a href="{{ route('admin.subjects.edit', $subject->id_subject) }}"
+                                    <a href="{{ route('admin.subjects.show', $subject->id) }}"
+                                        class="btn btn-sm btn-success">Manage Exams</a>
+
+                                    <a href="{{ route('admin.subjects.edit', $subject->id) }}"
                                         class="btn btn-sm btn-primary">Edit</a>
 
-                                    <form action="{{ route('admin.subjects.destroy', $subject->id_subject) }}"
-                                        method="POST" class="d-inline">
+                                    <form action="{{ route('admin.subjects.destroy', $subject->id) }}" method="POST"
+                                        class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger"

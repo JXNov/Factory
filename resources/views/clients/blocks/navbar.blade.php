@@ -1,79 +1,72 @@
-<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('/') }}">Le_Quizz</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+{{-- <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Exams
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Regist Exams</a></li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="#">Manage Exams</a></li>
+    </ul>
+</li> --}}
+
+<nav class="navbar navbar-expand-md sticky-top navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url('/') }}">
+            {{ config('app.name', 'Laravel') }}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Left Side Of Navbar -->
+            <ul class="navbar-nav me-auto">
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Subjects
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Regist Subjects</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Manage Subjects</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Exams
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Regist Exams</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Manage Exams</a></li>
-                    </ul>
-                </li>
             </ul>
-        </div>
 
-        <div class="d-flex" id="navbarNavItems">
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success mr-3" type="submit">Search</button>
-            </form>
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ms-auto">
+                <!-- Authentication Links -->
+                @guest
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                    @endif
 
-            @php
-                // Example PHP logic to toggle login and user options
-                $isLoggedIn = false; // Replace with your actual logic to check if the user is logged in
-            @endphp
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                        </a>
 
-            @if ($isLoggedIn)
-                <!-- User is logged in, show user options -->
-                <div id="userOptions" class="ms-2">
-                    <div class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" id="userOptionsButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle me-2">
-                            User Name
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="userOptionsButton">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
-            @else
-                <!-- User is not logged in, show login button -->
-                <a href="{{ route('register') }}">
-                    <button id="loginBtn" class="btn btn-primary ms-2">Login</button>
-                </a>
-            @endif
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            @if (Auth::user()->role == 1)
+                                <a class="dropdown-item" href="{{ route('admin.home') }}">Admin pages</a>
+                            @endif
+
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @endguest
+            </ul>
         </div>
     </div>
 </nav>

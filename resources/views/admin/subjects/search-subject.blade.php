@@ -23,15 +23,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($subjects as $key => $subject)
+                        @foreach ($listSubjects as $key => $subject)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $subject->name_subject }}</td>
+                                <td>{{ $subject->namet }}</td>
                                 <td>
-                                    <a href="{{ route('admin.subjects.edit', $subject->id_subject) }}"
+                                    <a href="{{ route('admin.subjects.edit', $subject->id) }}"
                                         class="btn btn-sm btn-primary">Edit</a>
 
-                                    <form action="{{ route('admin.subjects.destroy', $subject->id_subject) }}" method="POST"
+                                    <form action="{{ route('admin.subjects.destroy', $subject->id) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')

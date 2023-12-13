@@ -29,12 +29,12 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.questions') }}">
                     <span data-feather="file-text"></span>
                     Scores
                 </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.users') }}">

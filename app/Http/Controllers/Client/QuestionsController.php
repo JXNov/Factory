@@ -5,57 +5,54 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Client\Subjects;
-use App\Models\Client\Exams;
-use App\Models\Client\Questions;
+use App\Models\Subjects;
+use App\Models\Exams;
+use App\Models\Questions;
+use App\Models\User;
+use App\Models\UsersExams;
 
 class QuestionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-    }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $exams = new Exams();
-        $exams = $exams->getExamById($id);
+        $getExam = Exams::findOrFail($id);
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
-        return view('clients.questions.show', compact('exams', 'questions'));
+        $timeLimit = $getExam->time_limit;
+        foreach ($listQuestions as $question) {
+            if ($getExam->id == $question->exam_id) {
+                $countdown = $timeLimit * 60;
+            }
+        }
+
+        return view('clients.questions.show', compact('getExam', 'listQuestions', 'countdown'));
     }
 
-    public function point(Request $request, string $id)
+    public function completeExam(Request $request, string $examId, string $userId)
     {
         $answers = $request->all();
 
-        $exams = new Exams();
-        $exams = $exams->getExamById($id);
+        $getExam = Exams::findOrFail($examId);
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
         $userAnswers = $answers['answers'];
 
         $point = 0;
 
-        foreach ($exams as $exam) {
-            $limitQuest = $exam->exam_limit_quest;
+        $limitQuest = $getExam->number_of_questions;
 
-            foreach ($questions as $question) {
-                if ($exam->id_exam == $question->id_exam) {
-                    foreach ($userAnswers as $key => $userAnswer) {
-                        if ($question->id_question == $key) {
-                            if ($question->correct_answer == $userAnswer) {
-                                $point++;
-                            }
+        foreach ($listQuestions as $question) {
+            if ($getExam->id == $question->exam_id) {
+                foreach ($userAnswers as $key => $userAnswer) {
+                    if ($question->id == $key) {
+                        if ($question->correct_answer == $userAnswer) {
+                            $point++;
                         }
                     }
                 }
@@ -64,6 +61,33 @@ class QuestionsController extends Controller
 
         $point = $point / $limitQuest * 10;
 
-        return view('clients.questions.point', compact('exams', 'questions', 'point'));
+        User::join('users_exams', 'users.id', '=', 'users_exams.user_id')
+            ->where('users_exams.user_id', $userId)
+            ->where('users_exams.exam_id', $examId)
+            ->first();
+
+        UsersExams::insert([
+            'user_id' => $userId,
+            'exam_id' => $examId,
+            'score' => $point,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->route('questions.result', [$examId, $userId])->withoutHeader('Referer');
+    }
+
+    public function result(string $examId, string $userId)
+    {
+
+        $getExam = Exams::findOrFail($examId);
+
+        $getUserScore = User::join('users_exams', 'users.id', '=', 'users_exams.user_id')
+            ->where('users_exams.user_id', $userId)
+            ->where('users_exams.exam_id', $examId)
+            ->orderBy('users_exams.created_at', 'desc')
+            ->first();
+
+        return view('clients.questions.result', compact('getExam', 'getUserScore'));
     }
 }

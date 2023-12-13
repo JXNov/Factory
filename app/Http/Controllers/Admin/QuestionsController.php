@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Admin\Subjects;
-use App\Models\Admin\Exams;
-use App\Models\Admin\Questions;
+use App\Models\Subjects;
+use App\Models\Exams;
+use App\Models\Questions;
 
 class QuestionsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -18,35 +19,30 @@ class QuestionsController extends Controller
     {
         $search = $request->input('exam');
 
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $listExams = Exams::all();
 
-        $exams = new Exams();
-        $exams = $exams->getAllExams();
+        $listSubjects = Subjects::all();
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
-        return view('admin.questions.lists', compact('subjects', 'exams', 'questions', 'search'));
+        return view('admin.questions.lists', compact('listExams', 'listSubjects', 'listQuestions', 'search'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $exams = new Exams();
-        $exams = $exams->getAllExams();
+        $listExams = Exams::all();
 
-        return view('admin.questions.create', compact('exams'));
+        return view('admin.questions.create', compact('listExams'));
     }
 
     public function createByExam(string $id)
     {
-        $exams = new Exams();
-        $exams = $exams->getExamById($id);
+        $getExam = Exams::findOrFail($id);
 
-        return view('admin.questions.createByExam', compact('exams'));
+        return view('admin.questions.createByExam', compact('getExam'));
     }
 
     /**
@@ -56,20 +52,42 @@ class QuestionsController extends Controller
     {
         $data = $request->all();
 
-        $questions = new Questions();
-        $questions = $questions->createQuestion($data);
+        $insertQuestion = Questions::insert([
+            'name' => $data['question'],
+            'option_a' => $data['choice1'],
+            'option_b' => $data['choice2'],
+            'option_c' => $data['choice3'],
+            'option_d' => $data['choice4'],
+            'correct_answer' => $data['correct'],
+            'exam_id' => $data['exam'],
+        ]);
 
-        return redirect()->route('admin.questions');
+        if ($insertQuestion) {
+            return redirect()->route('admin.questions')->with('success', 'Question created successfully');
+        } else {
+            return redirect()->route('admin.questions')->with('error', 'Question created failed');
+        }
     }
 
     public function storeByExam(Request $request, string $id)
     {
         $data = $request->all();
 
-        $questions = new Questions();
-        $questions = $questions->createQuestion($data);
+        $insertQuestionByExam = Questions::insert([
+            'name' => $data['question'],
+            'option_a' => $data['choice1'],
+            'option_b' => $data['choice2'],
+            'option_c' => $data['choice3'],
+            'option_d' => $data['choice4'],
+            'correct_answer' => $data['correct'],
+            'exam_id' => $id,
+        ]);
 
-        return redirect()->route('admin.exams.show', $id);
+        if ($insertQuestionByExam) {
+            return redirect()->route('admin.exams.show', $id)->with('success', 'Question created successfully');
+        } else {
+            return redirect()->route('admin.exams.show', $id)->with('error', 'Question created failed');
+        }
     }
 
     /**
@@ -77,37 +95,81 @@ class QuestionsController extends Controller
      */
     public function show(string $id)
     {
-        $questions = new Questions();
-        $questions = $questions->getQuestionById($id);
+        $getQuestion = Questions::findOrFail($id);
 
-        return view('admin.questions.show', compact('questions'));
+        return view('admin.questions.show', compact('getQuestion'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
-        $questions = new Questions();
-        $questions = $questions->getQuestionById($id);
+        $request->session()->put('id_question', $id);
 
-        $exams = new Exams();
-        $exams = $exams->getAllExams();
+        $getQuestion = Questions::findOrFail($id);
 
-        return view('admin.questions.edit', compact('questions', 'exams'));
+        $listExams = Exams::all();
+
+        return view('admin.questions.edit', compact('getQuestion', 'listExams'));
+    }
+
+    public function editByExam(Request $request, string $id)
+    {
+        $request->session()->put('id_question', $id);
+
+        $getQuestion = Questions::findOrFail($id);
+
+        $listExams = Exams::all();
+
+        return view('admin.questions.editByExam', compact('getQuestion', 'listExams'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
+        $id = session('id_question');
         $data = $request->all();
 
-        $questions = new Questions();
-        $questions = $questions->updateQuestion($data, $id);
+        $updateQuestion = Questions::findOrFail($id)->update([
+            'name' => $data['question'],
+            'option_a' => $data['choice1'],
+            'option_b' => $data['choice2'],
+            'option_c' => $data['choice3'],
+            'option_d' => $data['choice4'],
+            'correct_answer' => $data['correct'],
+            'exam_id' => $data['exam'],
+        ]);
 
-        return redirect()->route('admin.questions');
+        if ($updateQuestion) {
+            return redirect()->route('admin.questions')->with('success', 'Question updated successfully');
+        } else {
+            return redirect()->route('admin.questions')->with('error', 'Question updated failed');
+        }
+    }
+
+    public function updateByExam(Request $request)
+    {
+        $id = session('id_question');
+        $data = $request->all();
+
+        $updateQuestionByExam = Questions::findOrFail($id)->update([
+            'name' => $data['question'],
+            'option_a' => $data['choice1'],
+            'option_b' => $data['choice2'],
+            'option_c' => $data['choice3'],
+            'option_d' => $data['choice4'],
+            'correct_answer' => $data['correct'],
+            'exam_id' => $data['exam'],
+        ]);
+
+        if ($updateQuestionByExam) {
+            return redirect()->route('admin.exams.show', [$data['exam']])->with('success', 'Question updated successfully');
+        } else {
+            return redirect()->route('admin.exams.show', [$data['exam']])->with('error', 'Question updated failed');
+        }
     }
 
     /**
@@ -115,9 +177,20 @@ class QuestionsController extends Controller
      */
     public function destroy(string $id)
     {
-        $questions = new Questions();
-        $questions = $questions->deleteQuestion($id);
+        if (Questions::findOrFail($id)->delete()) {
+            return redirect()->route('admin.questions')->with('success', 'Question deleted successfully');
+        } else {
+            return redirect()->route('admin.questions')->with('error', 'Question deleted failed');
+        }
+    }
 
-        return redirect()->route('admin.questions');
+    public function destroyByExam(string $id)
+    {
+
+        if (Questions::findOrFail($id)->delete()) {
+            return redirect()->back()->with('success', 'Question deleted successfully');
+        } else {
+            return redirect()->back()->with('error', 'Question deleted failed');
+        }
     }
 }

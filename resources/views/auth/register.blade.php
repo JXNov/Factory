@@ -1,123 +1,77 @@
-@extends('layouts.register')
-
-@section('title')
-    Register
-@endsection
+@extends('layouts.app')
 
 @section('content')
-    <div class="forms-container">
-        <div class="signin-signup">
-            <form action="#" class="sign-in-form" method="POST">
-                <h2 class="title">Sign in</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Register') }}</div>
 
-                <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Username" />
+                <div class="card-body">
+                    <form method="POST" action="{{ route('register') }}">
+                        @csrf
+
+                        <div class="row mb-3">
+                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <div class="row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Register') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" />
-                </div>
-
-                <input type="submit" value="Login" class="btn solid" />
-                <p class="social-text">Or Sign in with social platforms</p>
-
-                <div class="social-media">
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </div>
-
-                @csrf
-            </form>
-
-            <form action="" class="sign-up-form" method="POST">
-                <h2 class="title">Sign up</h2>
-
-                <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Username" />
-                </div>
-
-                <div class="input-field">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" placeholder="Email" />
-                </div>
-
-                <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" />
-                </div>
-
-                <input type="submit" class="btn" value="Sign up" />
-                <p class="social-text">Or Sign up with social platforms</p>
-
-                <div class="social-media">
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </div>
-                @csrf
-            </form>
+            </div>
         </div>
     </div>
-
-    <div class="panels-container">
-        <div class="panel left-panel">
-            <div class="content">
-                <h3>New here ?</h3>
-
-                <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-                ex ratione. Aliquid!
-                </p>
-
-                <button class="btn transparent" id="sign-up-btn">
-                Sign up
-                </button>
-            </div>
-
-            <img src="{{asset('assets/images/log.svg')}}" class="image" alt="" />
-        </div>
-
-        <div class="panel right-panel">
-            <div class="content">
-                <h3>One of us ?</h3>
-
-                <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                laboriosam ad deleniti.
-                </p>
-
-                <button class="btn transparent" id="sign-in-btn">
-                Sign in
-                </button>
-            </div>
-
-            <img src="{{asset('assets/images/register.svg')}}" class="image" alt="" />
-        </div>
-    </div>
-@endsection
-
-@section('scripts')
-    <script src="{{asset('assets/js/register.js')}}"></script>
+</div>
 @endsection

@@ -25,8 +25,8 @@
                     <label for="exam" class="form-label">Exam</label>
                     <select class="form-select" id="exam" name="exam">
                         <option selected>Select exam</option>
-                        @foreach ($exams as $exam)
-                            <option value="{{ $exam->id_exam }}">{{ $exam->exam_title }}</option>
+                        @foreach ($listExams as $exam)
+                            <option value="{{ $exam->id }}">{{ $exam->name }}</option>
                         @endforeach
                     </select>
                 </div>

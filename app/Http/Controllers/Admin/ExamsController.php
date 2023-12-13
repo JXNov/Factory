@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Admin\Exams;
-use App\Models\Admin\Subjects;
-use App\Models\Admin\Questions;
+use App\Models\Subjects;
+use App\Models\Exams;
+use App\Models\Questions;
 
 class ExamsController extends Controller
 {
@@ -18,16 +18,13 @@ class ExamsController extends Controller
     // Use the index method to display a list of exams. / Method: GET / URI: /admin/exams
     public function index()
     {
-        $exams = new Exams();
-        $exams = $exams->getAllExams();
+        $listExams = Exams::all();
 
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $listSubjects = Subjects::all();
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
-        return view('admin.exams.lists', compact('exams', 'subjects', 'questions'));
+        return view('admin.exams.lists', compact('listExams', 'listSubjects', 'listQuestions'));
     }
 
     /**
@@ -37,10 +34,16 @@ class ExamsController extends Controller
     // Use the create method to display a form for creating a new exam. / Method: GET / URI: /admin/exams/create
     public function create()
     {
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $listSubjects = Subjects::all();
 
-        return view('admin.exams.create', compact('subjects'));
+        return view('admin.exams.create', compact('listSubjects'));
+    }
+
+    public function createBySubject(string $id)
+    {
+        $getSubject = Subjects::findOrFail($id);
+
+        return view('admin.exams.createBySubject', compact('getSubject'));
     }
 
     /**
@@ -52,10 +55,39 @@ class ExamsController extends Controller
     {
         $data = $request->all();
 
-        $exams = new Exams();
-        $exams = $exams->createExam($data);
+        $insertExam = Exams::insert([
+            'name' => $data['name'],
+            'time_limit' => $data['timeLimit'],
+            'number_of_questions' => $data['limitQuest'],
+            'description' => $data['desc'],
+            'subject_id' => $data['subject'],
+        ]);
 
-        return redirect()->route('admin.exams');
+        if ($insertExam) {
+            return redirect()->route('admin.exams')->with('success', 'Exam created successfully');
+        } else {
+            return redirect()->route('admin.exams')->with('error', 'Exam creation failed');
+        }
+    }
+
+    public function storeBySubject(Request $request, string $id)
+    {
+        $data = $request->all();
+
+        $insertExam = Exams::insert([
+            'name' => $data['name'],
+            'time_limit' => $data['timeLimit'],
+            'number_of_questions' => $data['limitQuest'],
+            'description' => $data['desc'],
+            'subject_id' => $id,
+        ]);
+
+
+        if ($insertExam) {
+            return redirect()->route('admin.subjects.show', $id)->with('success', 'Exam created successfully');
+        } else {
+            return redirect()->route('admin.subjects.show', $id)->with('error', 'Exam creation failed');
+        }
     }
 
     /**
@@ -65,32 +97,42 @@ class ExamsController extends Controller
     // Use the show method to display a specific exam. / Method: GET / URI: /admin/exams/{id}
     public function show(string $id)
     {
-        $exams = new Exams();
-        $exams = $exams->getExamById($id);
+        $getExam = Exams::findOrFail($id);
 
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $listSubjects = Subjects::all();
 
-        $questions = new Questions();
-        $questions = $questions->getAllQuestions();
+        $listQuestions = Questions::all();
 
-        return view('admin.exams.show', compact('exams', 'subjects', 'questions'));
+        $maxQuestions = Questions::where('exam_id', $id)->count();
+
+        return view('admin.exams.show', compact('getExam', 'listSubjects', 'listQuestions', 'maxQuestions'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
 
-    // Use the edit method to display a form for editing a specific exam. / Method: GET / URI: /admin/exams/{id}/edit
-    public function edit(string $id)
+    // Use the edit method to display a form for editing a specific exam. / Method: GET / URI: /admin/exams/edit/{id}
+    public function edit(Request $request, string $id)
     {
-        $exams = new Exams();
-        $exams = $exams->getExamById($id);
+        $request->session()->put('id_exam', $id);
 
-        $subjects = new Subjects();
-        $subjects = $subjects->getAllSubjects();
+        $getExam = Exams::findOrFail($id);
 
-        return view('admin.exams.edit', compact('exams', 'subjects'));
+        $getSubject = Subjects::findOrFail($getExam->subject_id);
+
+        return view('admin.exams.edit', compact('getExam', 'getSubject'));
+    }
+
+    public function editBySubject(Request $request, string $id)
+    {
+        $request->session()->put('id_exam', $id);
+
+        $getExam = Exams::findOrFail($id);
+
+        $getSubject = Subjects::findOrFail($getExam->subject_id);
+
+        return view('admin.exams.editBySubject', compact('getExam', 'getSubject'));
     }
 
     /**
@@ -98,14 +140,44 @@ class ExamsController extends Controller
      */
 
     // Use the update method to update a specific exam in the database. / Method: PUT/PATCH / URI: /admin/exams/{id}
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
+        $id = session('id_exam');
         $data = $request->all();
 
-        $exams = new Exams();
-        $exams = $exams->updateExam($data, $id);
+        $updateExam = Exams::findOrFail($id)->update([
+            'name' => $data['name'],
+            'time_limit' => $data['timeLimit'],
+            'number_of_questions' => $data['limitQuest'],
+            'description' => $data['desc'],
+            'subject_id' => $data['subject'],
+        ]);
 
-        return redirect()->route('admin.exams');
+        if ($updateExam) {
+            return redirect()->route('admin.exams')->with('success', 'Exam updated successfully');
+        } else {
+            return redirect()->route('admin.exams')->with('error', 'Exam update failed');
+        }
+    }
+
+    public function updateBySubject(Request $request)
+    {
+        $id = session('id_exam');
+        $data = $request->all();
+
+        $updateExam = Exams::findOrFail($id)->update([
+            'name' => $data['name'],
+            'time_limit' => $data['timeLimit'],
+            'number_of_questions' => $data['limitQuest'],
+            'description' => $data['desc'],
+            'subject_id' => $data['subject'],
+        ]);
+
+        if ($updateExam) {
+            return redirect()->route('admin.subjects.show', [$data['subject']])->with('success', 'Exam updated successfully');
+        } else {
+            return redirect()->route('admin.subjects.show', [$data['subject']])->with('error', 'Exam update failed');
+        }
     }
 
     /**
@@ -115,9 +187,10 @@ class ExamsController extends Controller
     // Use the destroy method to delete a specific exam from the database. / Method: DELETE / URI: /admin/exams/{id}
     public function destroy(string $id)
     {
-        $exams = new Exams();
-        $exams = $exams->deleteExam($id);
-
-        return redirect()->route('admin.exams');
+        if (Exams::findOrFail($id)->delete()) {
+            return redirect()->route('admin.exams')->with('success', 'Exam deleted successfully');
+        } else {
+            return redirect()->route('admin.exams')->with('error', 'Exam deletion failed');
+        }
     }
 }

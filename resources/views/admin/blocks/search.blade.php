@@ -13,9 +13,9 @@
         @include('admin.blocks.sidebar')
 
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            @if (isset($search) && count($exams) > 0)
+            @if (isset($search) && count($listExams) > 0)
                 @include('admin.exams.search-exam')
-            @elseif (isset($search) && count($subjects) > 0)
+            @elseif (isset($search) && count($listSubjects) > 0)
                 @include('admin.subjects.search-subject')
             @else
                 <h2 class="pt-3 pb-2 mb-3">Search no results</h2>

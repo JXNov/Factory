@@ -14,6 +14,7 @@
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <h2 class="pt-3 pb-2 mb-3">Questions</h2>
 
+            @php $i = 1; @endphp
             {{-- Search --}}
             <form action="{{ route('admin.questions') }}" method="GET">
                 <div class="row align-items-center">
@@ -21,10 +22,10 @@
                         <div class="mb-3">
                             <select class="form-select" name="exam" id="exam">
                                 <option value="" selected>All Exam</option>
-                                @foreach ($exams as $exam)
-                                    <option value="{{ $exam->id_exam }}"
-                                        {{ request()->exam == $exam->id_exam ? 'selected' : '' }}>
-                                        {{ $exam->exam_title }}</option>
+                                @foreach ($listExams as $exam)
+                                    <option value="{{ $exam->id }}"
+                                        {{ request()->exam == $exam->id ? 'selected' : '' }}>
+                                        {{ $exam->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -58,36 +59,36 @@
                     </thead>
                     <tbody>
                         @if (isset($search))
-                            @foreach ($questions as $key => $question)
-                                @if ($question->id_exam == $search)
+                            @foreach ($listQuestions as $question)
+                                @if ($question->exam_id == $search)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $question->title_question }}</td>
+                                        <td>{{ $i++ }}</td>
+                                        <td>{{ $question->name }}</td>
                                         <td>
-                                            @foreach ($subjects as $subject)
-                                                @foreach ($exams as $exam)
-                                                    @if ($exam->id_exam == $question->id_exam && $exam->id_subject == $subject->id_subject)
-                                                        {{ $subject->name_subject }}
+                                            @foreach ($listSubjects as $subject)
+                                                @foreach ($listExams as $exam)
+                                                    @if ($exam->id == $question->exam_id && $exam->subject_id == $subject->id)
+                                                        {{ $subject->name }}
                                                     @endif
                                                 @endforeach
                                             @endforeach
                                         </td>
                                         <td>
-                                            @foreach ($exams as $exam)
-                                                @if ($exam->id_exam == $question->id_exam)
-                                                    {{ $exam->exam_title }}
+                                            @foreach ($listExams as $exam)
+                                                @if ($exam->id == $question->exam_id)
+                                                    {{ $exam->name }}
                                                 @endif
                                             @endforeach
                                         </td>
-                                        <td>{{ $question->choice1_question }}</td>
-                                        <td>{{ $question->choice2_question }}</td>
-                                        <td>{{ $question->choice3_question }}</td>
-                                        <td>{{ $question->choice4_question }}</td>
+                                        <td>{{ $question->option_a }}</td>
+                                        <td>{{ $question->option_b }}</td>
+                                        <td>{{ $question->option_c }}</td>
+                                        <td>{{ $question->option_d }}</td>
                                         <td>{{ $question->correct_answer }}</td>
                                         <td>
-                                            <a href="{{ route('admin.questions.edit', $question->id_question) }}"
+                                            <a href="{{ route('admin.questions.edit', $question->id) }}"
                                                 class="btn btn-primary">Edit</a>
-                                            <form action="{{ route('admin.questions.destroy', $question->id_question) }}"
+                                            <form action="{{ route('admin.questions.destroy', $question->id) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -99,36 +100,36 @@
                                 @endif
                             @endforeach
                         @else
-                            @foreach ($questions as $key => $question)
+                            @foreach ($listQuestions as $key => $question)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $question->title_question }}</td>
+                                    <td>{{ $question->name }}</td>
                                     <td>
-                                        @foreach ($subjects as $subject)
-                                            @foreach ($exams as $exam)
-                                                @if ($exam->id_exam == $question->id_exam && $exam->id_subject == $subject->id_subject)
-                                                    {{ $subject->name_subject }}
+                                        @foreach ($listSubjects as $subject)
+                                            @foreach ($listExams as $exam)
+                                                @if ($exam->id == $question->exam_id && $exam->subject_id == $subject->id)
+                                                    {{ $subject->name }}
                                                 @endif
                                             @endforeach
                                         @endforeach
                                     </td>
                                     <td>
-                                        @foreach ($exams as $exam)
-                                            @if ($exam->id_exam == $question->id_exam)
-                                                {{ $exam->exam_title }}
+                                        @foreach ($listExams as $exam)
+                                            @if ($exam->id == $question->exam_id)
+                                                {{ $exam->name }}
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td>{{ $question->choice1_question }}</td>
-                                    <td>{{ $question->choice2_question }}</td>
-                                    <td>{{ $question->choice3_question }}</td>
-                                    <td>{{ $question->choice4_question }}</td>
+                                    <td>{{ $question->option_a }}</td>
+                                    <td>{{ $question->option_b }}</td>
+                                    <td>{{ $question->option_c }}</td>
+                                    <td>{{ $question->option_d }}</td>
                                     <td>{{ $question->correct_answer }}</td>
                                     <td>
-                                        <a href="{{ route('admin.questions.edit', $question->id_question) }}"
+                                        <a href="{{ route('admin.questions.edit', $question->id) }}"
                                             class="btn btn-primary">Edit</a>
-                                        <form action="{{ route('admin.questions.destroy', $question->id_question) }}"
-                                            method="POST" class="d-inline">
+                                        <form action="{{ route('admin.questions.destroy', $question->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger"
