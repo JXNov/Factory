@@ -23,6 +23,17 @@ class SubjectsController extends Controller
         return view('admin.subjects.lists', compact('listSubjects'));
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        // Search subjects
+        $listSubjects = Subjects::where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        return view('admin.subjects.search', compact('listSubjects', 'search'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

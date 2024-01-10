@@ -14,7 +14,25 @@
     <div class="row">
         @include('admin.blocks.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3 pb-2 mb-3">Exams</h2>
+            <div class="row">
+                <h2 class="pt-3 pb-2 mb-3 col-md-3">Exams</h2>
+
+                <form class="d-flex pt-3 pb-2 mb-3 col-md-4" action="{{ route('admin.exams.search') }}" method="GET">
+                    <input type="text" name="search" id="search" class="form-control form-control-light me-4 rounded"
+                        placeholder="Search" aria-label="Search">
+
+                    <select name="subject_id" id="subject_id" class="form-select form-control-light me-4 rounded">
+                        <option value="">Select Subject</option>
+                        @foreach ($listSubjects as $subject)
+                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <button type="submit" class="btn btn-success">Search</button>
+                </form>
+            </div>
+
+
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -44,7 +62,8 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.exams.show', $exam->id) }}" class="btn btn-sm btn-success">Manage
+                                    <a href="{{ route('admin.exams.show', $exam->id) }}"
+                                        class="btn btn-sm btn-success">Manage
                                         Questions</a>
 
                                     <a href="{{ route('admin.exams.edit', $exam->id) }}"

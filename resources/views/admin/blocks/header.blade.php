@@ -1,10 +1,3 @@
-{{-- <form class="d-flex col-md-6" action="{{ route('admin.search') }}" method="GET">
-        <input type="text" name="search" id="search" class="form-control form-control-light me-4 rounded"
-            placeholder="Search" aria-label="Search">
-
-        <button type="submit" class="btn btn-success">Search</button>
-    </form> --}}
-
 <nav class="navbar navbar-expand-md sticky-top navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">

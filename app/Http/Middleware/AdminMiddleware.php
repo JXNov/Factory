@@ -17,16 +17,14 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            // Admin role == 1
-            // Client role == 0
-
+            // Admin == 1 / User == 0
             if (Auth::user()->role == '1') {
                 return $next($request);
             } else {
-                return redirect()->route('/')->with('message', 'You do not have admin access.');
+                return redirect()->route('/')->with('message', 'Access Denied as you are not Admin!');
             }
         } else {
-            return redirect()->route('login')->with('message', 'You must be logged in to access this page.');
+            return redirect()->route('login')->with('message', 'Login to access the website info');
         }
 
         return $next($request);

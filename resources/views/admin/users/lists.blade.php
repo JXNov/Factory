@@ -82,8 +82,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create User</a>
         </div>
     </div>
 @endsection

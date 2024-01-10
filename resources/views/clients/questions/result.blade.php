@@ -23,6 +23,34 @@
                     10
                 </h2>
             </div>
+
+            <div class="col-md-12">
+                <div class="text-center">
+                    <a href="{{ route('subjects.show', $getExam->subject_id) }}" class="btn btn-primary">Back to Exams
+                        Page</a>
+
+                    <a href="{{ route('/') }}" class="btn btn-primary">Back to home page</a>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script>
+        history.pushState(null, null, document.URL);
+
+        window.addEventListener('popstate', function() {
+            history.pushState(null, null, document.URL);
+        });
+
+        window.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            window.history.back();
+        });
+
+        window.addEventListener('load', function() {
+            window.history.forward();
+        });
+    </script>
+@endpush

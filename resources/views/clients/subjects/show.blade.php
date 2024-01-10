@@ -52,28 +52,76 @@
                                 <p class="card-text">{{ $exam->number_of_questions }} Questions</p>
 
                                 @if (Auth::check())
-                                    @if ($checkRegister == true)
-                                        <a href="{{ route('questions.show', [$exam->id, Auth::user()]) }}"
-                                            class="btn btn-primary">Do
-                                            test</a>
-                                    @else
-                                        <button type="button" class="btn btn-secondary btn-custom">Do
-                                            test</button>
+                                    @if ($checkRegister)
+                                        @php
+                                            $checkCompleted = \App\Models\UsersExams::where('user_id', Auth::user()->id)
+                                                ->where('exam_id', '=', $exam->id)
+                                                ->where('score', '>=', 5)
+                                                ->first();
+                                        @endphp
 
-                                        <span class="small badge text-bg-danger" style="visibility: hidden">You need to
-                                            register to take the
+                                        @if ($checkCompleted)
+                                            <button type="button" class="btn btn-success">Quiz Completed</button>
+                                            <span class="small badge text-bg-success">You have completed the quiz!</span>
+                                        @else
+                                            <a href="{{ route('questions.show', [$exam->id, Auth::user()]) }}"
+                                                class="btn btn-primary">Do test</a>
+                                        @endif
+                                    @else
+                                        <button type="button" class="btn btn-secondary btn-custom">Do test</button>
+                                        <span class="small badge text-bg-danger">You need to register to take the
                                             quiz!</span>
                                     @endif
                                 @else
                                     <a href="{{ route('login') }}" class="btn btn-primary">Register</a>
                                 @endif
+
                             </div>
                         </div>
                     </div>
                 @endif
             @endforeach
         </div>
-    </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>Comments</h3>
+                <hr>
+
+                @if (Auth::check())
+                    <form action="{{ route('subjects.comment', [$getSubject->id, Auth::user()->id]) }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea class="form-control" id="content" name="content"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Comment</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary">Comment</a>
+                @endif
+            </div>
+
+            @forelse ($listComments as $comment)
+                <div class="col-md-12 mt-4">
+                    <h5 class="card-title">
+                        @if ($getUser->id == $comment->user_id)
+                            @if ($getUser->role == 1)
+                                {{ $getUser->name }} <span class="badge bg-success">Admin</span>
+                            @else
+                                {{ $getUser->name }} <span class="badge bg-primary">User</span>
+                            @endif
+                        @endif
+                    </h5>
+                    <p class="card-text">{{ $comment->text }}</p>
+                </div>
+            @empty
+                <div class="col-md-12 mt-4">
+                    <p>No comments available.</p>
+                </div>
+            @endforelse
+        </div>
     </div>
 @endsection
 

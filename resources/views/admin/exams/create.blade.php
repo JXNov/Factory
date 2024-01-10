@@ -51,7 +51,8 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary col-1">Create</button>
+                <a href="{{ url()->previous() }}" class="btn btn-primary col-1">Back</a>
             </form>
         </div>
     </div>

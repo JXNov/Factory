@@ -88,6 +88,11 @@ body {
     color: #333;
 }
 
+.navbar-brand:focus {
+    color: #333;
+    box-shadow: none;
+}
+
 .form-control:focus {
     box-shadow: none;
 }

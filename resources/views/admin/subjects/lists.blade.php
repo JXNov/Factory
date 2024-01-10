@@ -12,7 +12,18 @@
     <div class="row">
         @include('admin.blocks.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3 pb-2 mb-3">Subjects</h2>
+            @php $i = 1; @endphp
+            <div class="row">
+                <h2 class="pt-3 pb-2 mb-3 col-md-3">Subjects</h2>
+
+                <form class="d-flex pt-3 pb-2 mb-3 col-md-4" action="{{ route('admin.subjects.search') }}" method="GET">
+                    <input type="text" name="search" id="search" class="form-control form-control-light me-4 rounded"
+                        placeholder="Search" aria-label="Search">
+
+                    <button type="submit" class="btn btn-success">Search</button>
+                </form>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -25,9 +36,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($listSubjects as $key => $subject)
+                        @foreach ($listSubjects as $subject)
                             <tr>
-                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $i++ }}</td>
                                 <td>{{ $subject->name }}</td>
                                 <td>{{ $subject->description }}</td>
                                 <td width="12%">

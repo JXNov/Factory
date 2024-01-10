@@ -37,6 +37,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::group(['prefix' => 'exams'], function () {
             Route::get('/', [AdminExamsController::class, 'index'])->name('admin.exams');
 
+            Route::get('/search', [AdminExamsController::class, 'search'])->name('admin.exams.search');
+
             Route::get('/create', [AdminExamsController::class, 'create'])->name('admin.exams.create');
 
             Route::get('/createBySubject/{id}', [AdminExamsController::class, 'createBySubject'])->name('admin.exams.createBySubject');
@@ -56,6 +58,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
         Route::group(['prefix' => 'subjects'], function () {
             Route::get('/', [AdminSubjectsController::class, 'index'])->name('admin.subjects');
+
+            Route::get('/search', [AdminSubjectsController::class, 'search'])->name('admin.subjects.search');
 
             Route::get('/create', [AdminSubjectsController::class, 'create'])->name('admin.subjects.create');
 
@@ -99,10 +103,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::get('/', [AdminUsersController::class, 'index'])->name('admin.users');
 
-            Route::get('/create', [AdminUsersController::class, 'create'])->name('admin.users.create');
-
-            Route::post('/', [AdminUsersController::class, 'store'])->name('admin.users.store');
-
             Route::get('/{id}', [AdminUsersController::class, 'show'])->name('admin.users.show');
 
             Route::get('/edit/{id}', [AdminUsersController::class, 'edit'])->name('admin.users.edit');
@@ -125,6 +125,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::middleware('auth')->post('/{id}', [ClientSubjectsController::class, 'registerSubject'])->name('subjects.register');
 
             Route::middleware('auth')->delete('/{id}', [ClientSubjectsController::class, 'unregisterSubject'])->name('subjects.unregister');
+
+            Route::middleware('auth')->post('/{subject_id}/{user_id}/comment', [ClientSubjectsController::class, 'comment'])->name('subjects.comment');
         });
 
         Route::prefix('questions')->group(function () {
@@ -137,6 +139,16 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::post('/complete/{examId}/{userId}', [ClientQuestionsController::class, 'completeExam'])->name('questions.complete');
 
             Route::get('/result/{examId}/{userId}', [ClientQuestionsController::class, 'result'])->name('questions.result');
+        });
+
+        Route::prefix('info')->group(function () {
+            Route::get('/{id}', [ClientHomeController::class, 'score'])->name('info.score');
+
+            Route::get('/{id}/subjects', [ClientHomeController::class, 'registeredSubjects'])->name('info.registered');
+
+            Route::get('/{id}/dashboard', [ClientHomeController::class, 'dashboard'])->name('info.dashboard');
+
+            Route::put('/update', [ClientHomeController::class, 'update'])->name('info.update');
         });
     });
 

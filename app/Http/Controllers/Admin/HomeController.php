@@ -7,29 +7,44 @@ use Illuminate\Http\Request;
 
 use App\Models\Exams;
 use App\Models\Subjects;
+use App\Models\UsersExams;
 
 class HomeController extends Controller
 {
 
     public function index()
     {
-        return view('admin.home');
+        $listExams = Exams::all();
+
+        $usersExams = UsersExams::join('exams', 'users_exams.exam_id', '=', 'exams.id')
+            ->join('subjects', 'exams.subject_id', '=', 'subjects.id')
+            ->join('users', 'users_exams.user_id', '=', 'users.id')
+            ->select('users_exams.*', 'exams.name as exam_name', 'subjects.name as subject_name', 'users.name as user_name', 'users.email as user_email')
+            ->orderBy('users_exams.score', 'desc')
+            ->get();
+
+
+        return view('admin.home', compact('usersExams', 'listExams'));
     }
 
     public function search(Request $request)
     {
-        $search = $request->input('search');
+        $exam = $request->input('exam_id');
 
-        // Search exams
-        $listExams = Exams::where('exam_title', 'LIKE', "%{$search}%")
-            ->orWhere('exam_description', 'LIKE', "%{$search}%")
-            ->paginate(10); // Adjust the pagination size as needed
+        $name = $request->input('user_name');
 
-        // Search subjects
-        $listSubjects = Subjects::where('name_subject', 'LIKE', "%{$search}%")
-            ->paginate(10); // Adjust the pagination size as needed
+        $listExams = Exams::all();
 
-        // Return view with results or a message
-        return view('admin.blocks.search', compact('listExams', 'listSubjects', 'search'));
+        $usersExams = UsersExams::join('exams', 'users_exams.exam_id', '=', 'exams.id')
+            ->join('subjects', 'exams.subject_id', '=', 'subjects.id')
+            ->join('users', 'users_exams.user_id', '=', 'users.id')
+            ->select('users_exams.*', 'exams.name as exam_name', 'subjects.name as subject_name', 'users.name as user_name', 'users.email as user_email')
+            ->where('users.name', 'like', '%' . $name . '%')
+            ->where('exams.id', 'like', '%' . $exam . '%')
+            ->orderBy('users_exams.score', 'desc')
+            ->limit(1)
+            ->get();
+
+        return view('admin.blocks.search', compact('usersExams', 'listExams'));
     }
 }

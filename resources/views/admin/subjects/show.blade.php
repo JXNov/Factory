@@ -67,6 +67,7 @@
                 </table>
                 <a href="{{ route('admin.exams.createBySubject', $getSubject->id) }}" class="btn btn-primary">Add
                     Exam</a>
+                <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
             </div>
         </div>
     @endsection

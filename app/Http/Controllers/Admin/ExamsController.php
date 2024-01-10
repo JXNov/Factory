@@ -27,6 +27,26 @@ class ExamsController extends Controller
         return view('admin.exams.lists', compact('listExams', 'listSubjects', 'listQuestions'));
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $id = $request->input('subject_id');
+
+        $listSubjects = Subjects::all();
+
+        if ($id != null) {
+            $listExams = Exams::where('name', 'LIKE', "%{$search}%")
+                ->where('subject_id', $id)
+                ->get();
+        } else {
+            $listExams = Exams::where('name', 'LIKE', "%{$search}%")
+                ->get();
+        }
+
+        return view('admin.exams.search', compact('listExams', 'listSubjects', 'search'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

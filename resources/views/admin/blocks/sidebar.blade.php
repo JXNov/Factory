@@ -22,13 +22,6 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.questions') }}">
-                    <span data-feather="help-circle"></span>
-                    Questions
-                </a>
-            </li>
-
             {{-- <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.questions') }}">
                     <span data-feather="file-text"></span>

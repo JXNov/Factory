@@ -24,7 +24,9 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav me-auto">
-
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('subjects') }}">Subjects</a>
+                </li>
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -52,6 +54,12 @@
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if (Auth::user()->role == 1)
                                 <a class="dropdown-item" href="{{ route('admin.home') }}">Admin pages</a>
+                            @else
+                                <a class="dropdown-item" href="{{ route('info.score', Auth::user()->id) }}">Score</a>
+                                <a class="dropdown-item" href="{{ route('info.registered', Auth::user()->id) }}">Subjects
+                                    Registered</a>
+                                <a class="dropdown-item"
+                                    href="{{ route('info.dashboard', Auth::user()->id) }}">Dashboard</a>
                             @endif
 
                             <a class="dropdown-item" href="{{ route('logout') }}"

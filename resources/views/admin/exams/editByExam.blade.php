@@ -52,6 +52,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
             </form>
         </div>
     </div>

@@ -4,6 +4,17 @@
     Do Test
 @endsection
 
+@section('css')
+    <style>
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="container">
         @if (session('msg'))
@@ -29,6 +40,11 @@
                             </div>
 
                             <div class="col-md-12 mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="hidden" name="answers[{{ $question->id }}]"
+                                        id="choice{{ $question->id }}_4" value="E">
+                                </div>
+
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="answers[{{ $question->id }}]"
                                         id="choice{{ $question->id }}_1" value="A">
@@ -154,7 +170,6 @@
         let inputs = form.querySelectorAll('input[type="radio"]');
         let answers = localStorage.getItem('answers') == null ? [] : localStorage.getItem('answers');
 
-        // Kiểm tra xem localStorage có khả dụng không
         if (typeof localStorage !== 'undefined') {
             // JavaScript add data to local storage
             for (let i = 0; i < inputs.length; i++) {
@@ -170,13 +185,12 @@
                     }
 
                     answers.push(obj)
-                    // Cập nhật local storage khi có sự thay đổi cụ thể
+
                     localStorage.setItem('answers', JSON.stringify(answers));
                 });
             }
 
             // JavaScript get data from local storage
-
             if (answers.length > 0) {
                 answers = JSON.parse(answers);
 
@@ -192,10 +206,26 @@
             }
         }
 
+        history.pushState(null, null, document.URL);
+
+        window.addEventListener('popstate', function() {
+            history.pushState(null, null, document.URL);
+        });
+
+        window.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.querySelector('body').addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || e.key === 'f12') {
+                e.preventDefault();
+            }
+        });
+
         document.querySelector('#form-questions').addEventListener('submit', function(event) {
+            localStorage.removeItem('answers');
             localStorage.removeItem('countdown_' + window.location.href + '_minutes');
             localStorage.removeItem('countdown_' + window.location.href + '_seconds');
-            localStorage.removeItem('answers');
         });
     </script>
 @endpush

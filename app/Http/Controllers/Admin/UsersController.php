@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\UsersExams;
+use App\Models\UsersSubjects;
 
 class UsersController extends Controller
 {
@@ -17,36 +19,6 @@ class UsersController extends Controller
         $listUsers = User::all();
 
         return view('admin.users.lists', compact('listUsers'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $listUsers = User::all();
-
-        return view('admin.users.create', compact('listUsers'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $data = $request->all();
-
-        $insertUser = User::insert([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-        ]);
-
-        if ($insertUser) {
-            return redirect()->route('admin.users')->with('success', 'User created successfully');
-        } else {
-            return redirect()->route('admin.users')->with('error', 'User creation failed');
-        }
     }
 
     /**
@@ -85,7 +57,7 @@ class UsersController extends Controller
         $updateUser = User::findOrFail($id)->update([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
+            'role' => $data['role'],
         ]);
 
         if ($updateUser) {
@@ -100,6 +72,22 @@ class UsersController extends Controller
      */
     public function destroy(string $id)
     {
+        $usersExams = UsersExams::where('user_id', $id)->get();
+
+        foreach ($usersExams as $usersExam) {
+            UsersSubjects::deleted($usersExam->id);
+        }
+
+        UsersExams::where('user_id', $id)->delete();
+
+        $usersSubjects = UsersSubjects::where('user_id', $id)->get();
+
+        foreach ($usersSubjects as $usersSubject) {
+            UsersSubjects::deleted($usersSubject->id);
+        }
+
+        UsersSubjects::where('user_id', $id)->delete();
+
         if (User::findOrFail($id)->delete()) {
             return redirect()->route('admin.users')->with('success', 'User deleted successfully');
         } else {
